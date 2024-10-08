@@ -1,16 +1,26 @@
-FROM python:3.11.9
-
-# Set the working directory
-WORKDIR .
-
-# Copy the current directory contents into the container at /app
-COPY . ./
-
-# Install the required dependencies
+FROM python:3-alpine AS builder
+ 
+WORKDIR /app
+ 
+RUN python3 -m venv venv
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ 
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# Make port 8080 available to the world outside this container
+ 
+# Stage 2
+FROM python:3-alpine AS runner
+ 
+WORKDIR /app
+ 
+COPY --from=builder /app/venv venv
+COPY app.py app.py
+ 
+ENV VIRTUAL_ENV=/app/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV FLASK_APP=app/app.py
+ 
 EXPOSE 8080
-
-# Run app.py when the container launches
-CMD python app.py
+ 
+CMD ["gunicorn", "--bind" , ":8080", "--workers", "2", "app:app"]
