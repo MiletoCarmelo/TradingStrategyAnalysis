@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "risk-greeks-taipy"
+version = "0.1.0"
+description = ""
+authors = ["miletocarmelo <carmelo.mileto@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.9"
+taipy = "^3.1.1"
+taipy-templates = "^3.1.1"
+pandas = "2.1.4"
+numpy = "1.26.4"
+yfinance = "^0.2.44"
+reflex = "^0.6.1"
+plotly = "^5.24.1"
+scipy = "^1.14.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

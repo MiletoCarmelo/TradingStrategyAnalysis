@@ -1,0 +1,232 @@
+/* NAV BAR */
+
+.left-navbar {
+    background-color: #2c3e50;
+    color: white;
+    height: 100vh;
+    width: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 20px;
+}
+.left-navbar:hover {
+    width: 20%;
+}
+.nav-item {
+    padding: 15px 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.nav-item:hover {
+    color: #f1f1f1;
+}
+.nav-icon {
+    width: 20px;
+    text-align: center;
+}
+.main-content {
+    margin-left: 60px;
+    transition: margin-left 0.5s;
+}
+
+
+/* VERTICAL BAR */
+
+.vb {
+    background-color: #1b1e29;
+    margin : 0%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    min-height: 97vh; /* Ensure it takes at least the full viewport height */
+    position: relative; /* Use relative positioning */
+    width: 100%; /* Take remaining width */
+    overflow-y: auto; /* Allow vertical scrolling if content exceeds the height */
+}
+
+/* CENTERING */
+
+.centered-input {
+    width: 100%;  /* Adjust this value as needed */
+}
+
+
+/* BOX */
+
+.box_noborder {
+    margin: 0;
+    padding: 0;
+}
+
+.box_vbar {  
+    background-color: #1b1e29;
+    width: 100%;
+}
+
+.box {  
+    width: 100%;
+}
+
+
+.box-tools {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+/* PLOTS */
+
+.styling-plots {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* TEXT */
+
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+/* VISUAL SEPARATOR : HORIZONTAL BAR */
+
+hr {
+    border: 1px solid #2c3e50; /* Line color */
+    margin-left: 0%;
+    margin-right: 0%;
+    margin: 20px 20px; /* Space above and below the line */
+}
+
+
+/* ------------------- EXPANDABLE ------------------- */ 
+
+.sidebar-content {
+    padding: 15px 0;
+}
+
+.custom-expandable {
+    margin: 10px 0;
+}
+
+.custom-expandable > .tp-exp-header {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.custom-expandable > .tp-exp-content {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 0 0 5px 5px;
+}
+
+/* New styles for smaller titles */
+.custom-expandable h1,
+.custom-expandable h2,
+.custom-expandable h3,
+.custom-expandable h4,
+.custom-expandable h5,
+.custom-expandable h6 {
+    font-size: 1rem;  /* Adjust this value as needed */
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* Style for input labels */
+.custom-expandable label {
+    font-size: 0.9rem;  /* Adjust this value as needed */
+    font-weight: bold;
+}
+
+/* ------------------- BUTTON ------------------- */ 
+
+/* Full-width button styles */
+.button {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    text-align: center;
+    background-color: #007bff;  /* You can change this to match your color scheme */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #7e7f81;  /* Darker shade for hover effect */
+}
+
+.button:active {
+    background-color: #ff6049;  /* Even darker for click effect */
+}
+
+/* Full-width button styles */
+.button_reset {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    text-align: center;
+    background-color: #be1d1d;  /* You can change this to match your color scheme */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.button_reset:hover {
+    background-color: #7e7f81;  /* Darker shade for hover effect */
+}
+
+.button_reset:active {
+    background-color: #ff6049;  /* Even darker for click effect */
+}
+
+
+/* ------------------- SELECTORS ------------------- */ 
+
+/* Full-width button styles */
+.selector {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    padding: 5px 5px;
+    text-align: center;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* ------------------- TABLES ------------------- */ 
+
+.tables {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    text-align: center;
+    border: none;
+    border-radius: 20px;
+}
