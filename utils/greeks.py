@@ -244,3 +244,4 @@ def get_greek_curve(ticker, type, ls, cp, strike, expirationDate, risk_free_rate
     greeks_values = greeks_values._append(rho_values)
 
     return greeks_values
+

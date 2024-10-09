@@ -207,68 +207,93 @@ def update_plot(state):
                                                     y_title="Purcentage")              
 
 
-# Portfolio
-# <|{tickers_list}|table|width=100%|on_delete=on_delete_table|>
+navbar = """
+<|container container-centered navbar|
 
+<|RESET|button|on_action=reset_tables|>
 
-strategy = Markdown("""
-
-<|layout|columns=1 1 8|
-
-    <|
-
-<|RESET|button|class_name=button_reset|on_action=reset_tables|>
-
+<|container container-padding_vertical|
 ---
+|>
 
-Selected Tickers 
+
 <|{ticker}|input|label=Ticker|>
 
-<|Add to portfolio|button|class_name=button|on_action=add_to_porfolio|>
+<|Add to portfolio|button|on_action=add_to_porfolio|>
 
+<|container container-padding_vertical|
 ---
+|>
 
-Portfolio 
-<|{ticker_selected}|selector|type=str|lov={tickers_list}|adapter={lambda u: u}|dropdown=True|>
-
-
-Since
+<|container container-centered navbar|
+<|Portfolio|expandable|expanded=False|
+<|{ticker_selected}|selector|type=str|lov={tickers_list}|adapter={lambda u: u}|dropdown=True|label=Portfolio|>
 <|{start_date}|date|label=Start Date|>
-To
 <|{end_date}|date|label=End Date|>
-Interval
-<|{interval}|selector|type=str|lov={intervals}|adapter={lambda u: u}|dropdown=True|>
+<|{interval}|selector|type=str|lov={intervals}|adapter={lambda u: u}|dropdown=True|label=Interval|>
+---
+<|UPDATE|button|on_action=pipeline|>
+|> 
+|>
 
-<|GENERATE CHART|button|class_name=button|on_action=pipeline|>
+|>
 
+<|container container-padding_vertical|
+---
+|>
 
-    |>
+<|container container-centered navbar|
 
-
-    <|
-
-
-Technical Indicator
-<|{ta}|selector|type=str|lov={ta_list}|adapter={lambda u: u}|dropdown=True|>
-
+<|container container-centered navbar|
+<|Technical indicators|expandable|expanded=False|
+<|{ta}|selector|type=str|lov={ta_list}|adapter={lambda u: u}|dropdown=True|label=Technical Indicator|>
 <|{window}|input|label=Window|>
 <|{short_window}|input|label=Short Window|>
 <|{long_window}|input|label=Long Window|>
 <|{span}|input|label=Span|>
 <|{smoothing}|input|label=Smoothing|>
-
-<|Add to chart|button|class_name=button|on_action=pipeline_ta|>
-
-
-<|TI on chart|expandable|expanded=True|class_name=custom-expandable|
-<|{ti_list_selected}|selector|type=str|lov={ti_list}|adapter={lambda u: u}|dropdown=False|multiple=True|mode=check|on_change=update_plot|>
+---
+<|ADD|button|on_action=pipeline_ta|>
+|>
 |>
 
+<|container container-padding_vertical|
+---
+|>
+
+<|container container-centered navbar|
+<|TI on chart|expandable|expanded=False|
+<|{ti_list_selected}|selector|type=str|lov={ti_list}|adapter={lambda u: u}|dropdown=False|multiple=True|mode=check|on_change=update_plot|>
+|>
+|>
+
+|>
+"""
+
+# Portfolio
+# <|{tickers_list}|table|width=100%|on_delete=on_delete_table|>
+
+# 
+
+strategy = Markdown("""
+
+<|layout|columns=1 9|
+
+    <|
+""" + navbar + """
     |>
 
     <|
-## Stock Price Chart
-<|chart|figure={plot_price_and_ta}|height=900px|width=100%|>
+
+<|part|class_name=full-width-container|
+<|part|
+<|part|class_name=full-width-container title|
+## TECHNICAL INDICATORS ANALYSIS
+|>
+|>
+<|chart|figure={plot_price_and_ta}|height=800px|>
+|>
+
     |>
 
 |>
@@ -277,6 +302,8 @@ Technical Indicator
 
 
 """)
+
+# <|chart|figure={plot_price_and_ta}|height=800px|width=90%|>
 
 
 # ## Pourcentage Chart

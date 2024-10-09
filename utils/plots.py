@@ -40,13 +40,6 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
     - plot: The created Plotly figure
     """
 
-    if x_title is None:
-        x_title = x_column
-    if y_title is None:
-        y_title = y_column
-    # if title is None:
-    #     title = f"{y_column} vs {x_column} by {color_column}"
-
     # Create an empty figure
     plot = go.Figure()
 
@@ -73,7 +66,7 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
                     line=dict(
                         color=custom_colors[i % len(custom_colors)],  # Set the color
                         dash=line_style, 
-                        width=3
+                        width=1
                     ),
                     legendgroup=legend_group,  # Assign to a legend group
                     legendgrouptitle_text=legend_group  # Set the group title
@@ -86,16 +79,16 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
         yaxis_title=y_title,
         showlegend=legend,  # Ensure the legend is displayed
         margin=dict(
-            l=80, 
-            r=40, 
-            t=40, 
-            b=80),  # Marges gauche, droite, haut et bas
+            l=30, 
+            r=10, 
+            t=10, 
+            b=10),  # Marges gauche, droite, haut et bas
         paper_bgcolor='rgba(255, 255, 255, 0)',  # Transparent
         plot_bgcolor='rgba(255, 255, 255, 0)',    # Transparent
-        xaxis_title_font=dict(size=15),  # X-axis title font size
-        yaxis_title_font=dict(size=15),   # Y-axis title font size
+        xaxis_title_font=dict(size=13),  # X-axis title font size
+        yaxis_title_font=dict(size=13),   # Y-axis title font size
         xaxis=dict(
-            tickfont=dict(size=15), 
+            tickfont=dict(size=13), 
             linecolor='#1b2135',  # Color of x-axis line
             linewidth=0, 
             gridcolor='#1b2135',  # Couleur du cadrillage
@@ -103,7 +96,7 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
             zerolinecolor='#1b2135',    # Couleur de la ligne zéro
             zerolinewidth=0),   # Y-axis tick font size
         yaxis=dict(
-            tickfont=dict(size=15), 
+            tickfont=dict(size=13), 
             linecolor='#1b2135',  # Color of x-axis line
             linewidth=0, 
             gridcolor='#1b2135',  # Couleur du cadrillage
@@ -112,8 +105,14 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
             zerolinewidth=0),   # Y-axis tick font size
         legend=dict(
             title=None, 
-            font=dict(size=15), 
+            font=dict(size=7), 
             bgcolor='rgba(255, 255, 255, 0)',  # Transparent
+            orientation="h",  # Horizontal orientation
+            yanchor="bottom",  # Anchor to bottom of the plot
+            y=-0.2,  # Position below the plot area
+            xanchor="center",  # Center horizontally
+            x=0.5, # Center position
+            traceorder="normal",
         )
     )
     if to_json:
@@ -167,7 +166,7 @@ def add_secondary_y(plot, data, x_column, y_column, color_column, line_type_colu
                     line=dict(
                         color=custom_colors[i % len(custom_colors)],  # Set the color
                         dash=line_style, 
-                        width=3
+                        width=1
                     ),
                     yaxis='y2',  # Use the secondary y-axis
                     legendgroup=legend_group,  # Assign to a legend group
@@ -179,8 +178,8 @@ def add_secondary_y(plot, data, x_column, y_column, color_column, line_type_colu
     plot.update_layout(
         yaxis2=dict(
             title=y_title,
-            titlefont=dict(size=15),
-            tickfont=dict(size=15),
+            titlefont=dict(size=13),
+            tickfont=dict(size=13),
             overlaying='y',
             side='right'
         ),
@@ -230,7 +229,7 @@ def add_vertical_bar(plot, x_value, info, color_id_nb=0, legend=True, to_json=Fa
         type="line",
         x0=x_value, x1=x_value,
         y0=y_min, y1=y_max,  # Adjust the y range based on your data
-        line=dict(color=color, width=2, dash="dot"),
+        line=dict(color=color, width=1, dash="dot"),
     )
 
     # plot.add_annotation(

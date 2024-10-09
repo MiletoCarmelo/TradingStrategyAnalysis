@@ -62,6 +62,7 @@ plot_gamma = None
 plot_vega = None
 plot_theta = None
 plot_rho = None
+data_performanes = pd.DataFrame(columns=["Performance", "Value"])
 
 
 # functions for the inputs tools (vertical left bar)
@@ -209,6 +210,8 @@ def reset_tables(state):
     plot_vega = None
     plot_theta = None
     plot_rho = None
+    data_performanes = data_performanes.iloc[0:0]
+    notify(state, "success", f'Tables reseted')
 
 # pipe line data update for plots : 
 
@@ -346,8 +349,8 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         y_column='value', 
                                         color_column='id', 
                                         line_type_column='line_type', 
-                                        x_title="S", 
-                                        y_title="Delta", 
+                                        # x_title="S", 
+                                        # y_title="Delta", 
                                         title=None, 
                                         legend=True)
 
@@ -356,8 +359,8 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         y_column='value', 
                                         color_column='id', 
                                         line_type_column='line_type', 
-                                        x_title="S", 
-                                        y_title="Gamma", 
+                                        # x_title="S", 
+                                        # y_title="Gamma", 
                                         title=None, 
                                         legend=True)
 
@@ -366,8 +369,8 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         y_column='value', 
                                         color_column='id', 
                                         line_type_column='line_type', 
-                                        x_title="S", 
-                                        y_title="Vega", 
+                                        # x_title="S", 
+                                        # y_title="Vega", 
                                         title=None, 
                                         legend=True)
 
@@ -376,8 +379,8 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         y_column='value', 
                                         color_column='id', 
                                         line_type_column='line_type', 
-                                        x_title="S", 
-                                        y_title="Theta", 
+                                        # x_title="S", 
+                                        # y_title="Theta", 
                                         title=None,
                                         legend=True)
 
@@ -386,8 +389,8 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         y_column='value',
                                         color_column='id',
                                         line_type_column='line_type',
-                                        x_title="S",
-                                        y_title="Rho",
+                                        # x_title="S",
+                                        # y_title="Rho",
                                         title=None,
                                         legend=True)
 
@@ -436,63 +439,76 @@ def update_states_variables_pipeline(state, data_payoff, data_portfolio, min_max
 
 # Define the option page content
 option_page = """
-### Call or put
-<|{callput_value}|toggle|lov=CALL;PUT|class_name=selector|>
-### Expiration Dates
-<|{expiration_dates_sel}|selector|type=str|lov={expiration_dates}|adapter={lambda u: u}|dropdown=True|>
-### Risk-Free Rate
+
+<|{callput_value}|toggle|lov=CALL;PUT|>
+
+<|container-paddingvertical|
+|>
+
+<|{expiration_dates_sel}|selector|type=str|lov={expiration_dates}|adapter={lambda u: u}|dropdown=True|label=Expiration dates|>
+
+<|container-paddingvertical|
+|>
+
 <|{rfr_value}|number|label=Risk-Free Rate|>
+
 ---
-<|Get option list|button|class_name=button|on_action=update_option_table|>
+
+<|Update list|button||on_action=update_option_table|>
+
 """
 
 # Define the stock page content
 stock_page = """
-### Aquisition Date
-<|{aquisition_dates_sel}|selector|type=str|lov={aquisition_dates}|adapter={lambda u: u}|dropdown=True|>
+<|{aquisition_dates_sel}|selector|type=str|lov={aquisition_dates}|adapter={lambda u: u}|dropdown=True|label=Aquisition Date|>
+
 ---
-<|Get stock list|button|class_name=button|on_action=update_stock_table|>
+
+<|Update list|button|on_action=update_stock_table|>
 """
 
 tables = """
 <|layout|columns=1 2|
+
     <|
 Instrument selection 
-<|{data_selection}|table|class_name=tables|page_size=10|page_size_options=10|on_action=update_portfolio_table|hover_text=Click on the row to add it to the Portfolio.|>
+<|{data_selection}|table|page_size=10|page_size_options=10|on_action=update_portfolio_table|hover_text=Click on the row to add it to the Portfolio.|>
     |>
+
 
     <|
 Portfolio 
-<|{data_portfolio}|table|class_name=tables|page_size=10|page_size_options=10|on_delete=delete_portfolio_table|hover_text=You can edit the quantiy.|editable=False|editable[show]=True|editable[quantity]=True|on_edit=update_inputs_portfolio_table|rebuild=True|selected={data_portfolio_row_seletion}|>
+<|{data_portfolio}|table|page_size=10|page_size_options=10|on_delete=delete_portfolio_table|hover_text=You can edit the quantiy.|editable=False|editable[show]=True|editable[quantity]=True|on_edit=update_inputs_portfolio_table|rebuild=True|selected={data_portfolio_row_seletion}|>
     |>
 
 |>
 """
 
 greeks_page = """
-<|layout|columns=1 1 1 1 1|
+<|layout|columns=1 1 1 1|
+
     <|
-<|chart|figure={plot_delta}|>
+<|chart|figure={plot_delta}|height=250px|>
     |>
 
     <|
-<|chart|figure={plot_gamma}|>
+<|chart|figure={plot_gamma}|height=250px|>
     |>
 
     <|
-<|chart|figure={plot_vega}|>
+<|chart|figure={plot_vega}|height=250px|>
     |>
 
     <|
-<|chart|figure={plot_theta}|>
+<|chart|figure={plot_theta}|height=250px|>
     |>
-
-    <|
-<|chart|figure={plot_rho}|>
-    |>
-
 |>
 """
+
+#     <|
+# <|chart|figure={plot_rho}|>
+#    |>
+
 
 
 options = Markdown("""
@@ -500,48 +516,79 @@ options = Markdown("""
 <|layout|columns=1 9|
 
     <|
-<|RESET|button|class_name=button_reset|on_action=reset_tables|>
 
+<|container container-centered navbar|
+
+<|RESET|button|class_name=taipy-button large_height|on_action=reset_tables|>
+
+<|container container-padding_vertical|
 ---
+|>
 
-Selected Tickers 
-<|{ticker}|input|label=Ticker|on_change=update_expiration_dates|on_action=update_expiration_dates|>
-Long or Short 
-<|{shortlong_value}|toggle|lov=LONG;SHORT|class_name=selector|>
+<|{ticker}|input|label=Select a ticker|on_change=update_expiration_dates|on_action=update_expiration_dates|>
 
+<|{shortlong_value}|toggle|lov=LONG;SHORT|>
+
+<|container container-padding_vertical|
 ---
+|>
 
-<|Option|expandable|expanded=False|class_name=custom-expandable|
+<|container container-centered navbar|
+
+<|Option|expandable|expanded=False|
 """ + option_page + """ 
 |>
-<|Stock|expandable|expanded=False|class_name=custom-expandable|
+
+|> 
+
+<|container container-centered navbar|
+
+<|Stock|expandable|expanded=False|
 """ + stock_page + """
 |>
 
---- 
+|>
 
-S range
-<|{min_max_s}|slider|min={min_max_s[0]}|max={min_max_s[1]}|on_change=update_plot_playoff|>
+<|container container-padding_vertical|
+---
+|> 
+
+<|{min_max_s}|slider|min={min_max_s[0]}|max={min_max_s[1]}|on_change=update_plot_playoff|labels=S range|>
+
+|>
 
     |>
 
     <|
-# Options Profit Calculator
+    
 
----
+<|part|class_name=full-width-container|
+<|part|
+<|part|class_name=full-width-container title|
+## Options Profit Calculator
+|>
+|>
 
+<|container container-centered|
+<|Tables instruments input|expandable|expanded=False|
 """ + tables + """
+|>
+|>
 
----
+<|layout|columns=8 2|
 
+    <|
 <|chart|figure={plot_payoff}|>
-
---- 
-
-""" + greeks_page + """
+    |>
+    <|
+<|table|data={data_performanes}|page_size=10|page_size_options=10|>
     |>
 
+""" + greeks_page + """
 
+|>
+
+    |>
 
 |>
 """)

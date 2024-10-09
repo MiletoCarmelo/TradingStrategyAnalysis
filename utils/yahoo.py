@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 import numpy as np
 
+
 def calculate_volatility(ticker, period='1y'):
     """
     Calculate the annualized volatility of a stock.
@@ -60,7 +61,7 @@ def get_options_expirations_dates(ticker="AAPL"):
     return options_df
     
 
-def get_options_info(ticker, expiration_date, ls, cp):
+def _get_options_info(ticker, expiration_date, ls, cp):
     # Fetch the stock data
     stock = yf.Ticker(ticker)
     
@@ -93,7 +94,8 @@ def get_options_info(ticker, expiration_date, ls, cp):
 
     # add ticker price
     ticker_price = get_price(ticker, '1d')
-    options_df["tickerPrice"] = round(ticker_price["Close"][-1],3)
+    options_df["tickerPrice"] = round(ticker_price["Close"].iloc[-1], 3)
+    # options_df["tickerPrice"] = round(ticker_price["Close"][-1],3)
 
     # update contractSymbol with cp and ls info 
     options_df["contractSymbol"] = options_df["contractSymbol"] + f"_{cp}_{ls}"
@@ -115,18 +117,20 @@ def get_options_list(ticker, expiration_dates, ls, cp):
     for date in expiration_dates:
         try:
             # Fetch options data for the chosen expiration date
-            options_df = get_options_info(ticker, date, ls, cp)
+            options_df = _get_options_info(ticker, date, ls, cp)
             options_list = pd.concat([options_list, options_df], ignore_index=True)
         except Exception as e:
             print(f"Error fetching options data for {date}: {e}")
 
     return options_list
 
+
 def get_price(ticker, period='5d'):
     # ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
     # Fetch the stock data
     stock = yf.Ticker(ticker)
     return stock.history(period=period)
+
 
 def get_stock_list(ticker, ls):
     df = pd.DataFrame()
@@ -151,3 +155,31 @@ def get_stock_list(ticker, ls):
     df["impliedVolatility"] = None
 
     return df
+
+
+def get_risk_free_rate(period="1y"):
+    # Fetch the 10-year U.S. Treasury bond yield
+    treasury_data = yf.Ticker("^TNX")  # ^TNX is the ticker for the 10-year Treasury yield
+    treasury_info = treasury_data.history(period=period)
+
+    # Get the most recent yield (in percentage)
+    risk_free_rate = treasury_info['Close'].iloc[-1] / 100  # Convert to decimal
+    return risk_free_rate
+
+
+def get_stock_min_max(ticker, period='1y'):
+    # Fetch the stock data
+    stock = yf.Ticker(ticker)
+    
+    # Get historical stock data
+    stock_data = stock.history(period=period)
+    
+    # Calculate the minimum and maximum stock prices
+    min_stock_price = stock_data['Low'].min()
+    max_stock_price = stock_data['High'].max()
+    
+    return min_stock_price, max_stock_price
+
+if __name__ == "__main__":
+    risk_free_rate = get_risk_free_rate()
+    print(f"Annualized Risk-Free Rate: {risk_free_rate:.2%}")

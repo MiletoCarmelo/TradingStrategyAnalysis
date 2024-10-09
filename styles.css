@@ -1,232 +1,298 @@
-/* NAV BAR */
-
-.left-navbar {
-    background-color: #2c3e50;
-    color: white;
-    height: 100vh;
-    width: 60px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 20px;
-}
-.left-navbar:hover {
-    width: 20%;
-}
-.nav-item {
-    padding: 15px 10px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.nav-item:hover {
-    color: #f1f1f1;
-}
-.nav-icon {
-    width: 20px;
-    text-align: center;
-}
-.main-content {
-    margin-left: 60px;
-    transition: margin-left 0.5s;
-}
+:root {
+    font-size: 0.8rem;
+  }
 
 
-/* VERTICAL BAR */
+/* ------------------- HORIZONTAL LINE --------------------------------- */ 
 
-.vb {
-    background-color: #1b1e29;
-    margin : 0%;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    min-height: 97vh; /* Ensure it takes at least the full viewport height */
-    position: relative; /* Use relative positioning */
-    width: 100%; /* Take remaining width */
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds the height */
-}
-
-/* CENTERING */
-
-.centered-input {
-    width: 100%;  /* Adjust this value as needed */
-}
-
-
-/* BOX */
-
-.box_noborder {
-    margin: 0;
-    padding: 0;
-}
-
-.box_vbar {  
-    background-color: #1b1e29;
-    width: 100%;
-}
-
-.box {  
-    width: 100%;
-}
-
-
-.box-tools {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    text-align: left;
-    width: 100%;
-    margin-left: 2%;
-    margin-right: 2%;
-}
-
-/* PLOTS */
-
-.styling-plots {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-/* TEXT */
-
-h3 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-
-/* VISUAL SEPARATOR : HORIZONTAL BAR */
 
 hr {
     border: 1px solid #2c3e50; /* Line color */
-    margin-left: 0%;
-    margin-right: 0%;
-    margin: 20px 20px; /* Space above and below the line */
+    margin-top: 10px;
+    margin-bottom: 0px;
+    border-radius: 25px;
+    background-color: #2c3e50;
 }
 
 
-/* ------------------- EXPANDABLE ------------------- */ 
+/* ------------------- FULL WIDTH CONTAINER --------------------------------- */
 
-.sidebar-content {
-    padding: 15px 0;
+.full-width-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 5px !important;
+    padding-bottom: 0px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    box-sizing: border-box !important;
 }
 
-.custom-expandable {
-    margin: 10px 0;
+.full-width-container > div {
+    width: 100% !important;
+    max-width: none !important;
 }
 
-.custom-expandable > .tp-exp-header {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+.full-width-container .title h2 {
+    font-size: 2rem !important;
+    margin: 0.7em 0 !important;
+    padding-bottom: 0.5em !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+    width: 100% !important;
 }
 
-.custom-expandable > .tp-exp-content {
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 0 0 5px 5px;
+.full-width-container .taipy-chart {
+    width: 100% !important;
+    max-width: none !important;
+    margin-bottom: 10px !important;
 }
 
-/* New styles for smaller titles */
-.custom-expandable h1,
-.custom-expandable h2,
-.custom-expandable h3,
-.custom-expandable h4,
-.custom-expandable h5,
-.custom-expandable h6 {
-    font-size: 1rem;  /* Adjust this value as needed */
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+
+/* ------------------- CONTAINER WITH INSIDE CENTERED ------------------- */ 
+
+.container-centered {
+    overflow: hidden;
+    /* background-color: rgba(255, 255, 255, 0.089); */
 }
 
-/* Style for input labels */
-.custom-expandable label {
-    font-size: 0.9rem;  /* Adjust this value as needed */
-    font-weight: bold;
+.container-centered > * {
+    width: 96%; /* Make all direct children full-width */
+    margin: 2% 2%; /* Add some vertical spacing between elements */
+    margin-left: auto; /* Center the element */
+    margin-right: auto; /* Center the element */
+    
+}
+
+.container-centered.navbar {
+    width: 94%;  /* Reduced from 90% to allow for centering */
+    overflow: hidden;
+    /* background-color: rgba(255, 255, 255, 0.089); => for dev puropse */ 
+}
+
+.container-paddingvertical {
+    overflow: hidden;
+    padding: 0.1vw 0;
+    /* background-color: rgba(255, 255, 255, 0.089); => for dev puropse */ 
+}
+
+.container-paddinghorzontal {
+    overflow: hidden;
+    padding-left: 0.2vw ;
+    padding-right: 0.2vw ;
+}
+
+.container-combined {
+    /* General container properties */
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+
+    /* Centered container properties */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* Additional properties for aesthetics and functionality */
+    overflow: hidden; /* Prevents content from spilling out */
+    background-color: rgba(255, 255, 255, 0.05); /* Slight background for visibility */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-combined {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/* Ensure direct children take full width if needed */
+.container-combined > * {
+    width: 100%;
 }
 
 /* ------------------- BUTTON ------------------- */ 
 
 /* Full-width button styles */
-.button {
+.taipy-button {
     width: 100%;
-    display: block;
+    height: 10%;  /* Maintain the 10% height */
+    min-height: 40px;  /* Ensure a minimum height for smaller screens */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-    margin-bottom: 2%;
-    margin-top: 2%;
-    text-align: center;
-    background-color: #007bff;  /* You can change this to match your color scheme */
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 10px;
 }
 
-.button:hover {
-    background-color: #7e7f81;  /* Darker shade for hover effect */
+
+.taipy-button:hover {
+    background-color: #0056b3;  /* Darker shade for hover */
+    transform: translateY(-1px);  /* Slight lift effect */
+    font-size: 1.2rem;  /* Maintain the font size */
 }
 
-.button:active {
-    background-color: #ff6049;  /* Even darker for click effect */
+.taipy-button:active {
+    background-color: #004085;  /* Even darker for click effect */
+    transform: translateY(1px);  /* Slight press effect */
 }
 
-/* Full-width button styles */
-.button_reset {
-    width: 100%;
-    display: block;
+
+/* ------------------- TOGGLE ------------------- */ 
+
+/* Full-width toggle styles */
+.taipy-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-    margin-bottom: 2%;
-    margin-top: 2%;
-    text-align: center;
-    background-color: #be1d1d;  /* You can change this to match your color scheme */
-    color: white;
-    border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 1.3rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 10px;
 }
 
-.button_reset:hover {
-    background-color: #7e7f81;  /* Darker shade for hover effect */
-}
+/* ------------------- SLIDER ------------------- */ 
 
-.button_reset:active {
-    background-color: #ff6049;  /* Even darker for click effect */
-}
-
-
-/* ------------------- SELECTORS ------------------- */ 
-
-/* Full-width button styles */
-.selector {
-    width: 100%;
-    display: block;
+/* Full-width slider styles */
+.taipy-slider {
+    width: 96%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-    padding: 5px 5px;
-    text-align: center;
-    color: white;
-    border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 5px;
 }
 
-/* ------------------- TABLES ------------------- */ 
+/* ------------------- EXPANDABLE ------------------- */
 
-.tables {
+.taipy-expandable {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.taipy-expandable-content {
+    width: 94%;
+    display: none;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.taipy-expandable-content.active {
+    display: block;
+    margin-top: 10px;
+    padding-top: 10px;
+
+}
+
+
+/* ------------------- INPUT ------------------- */
+
+.taipy-input {
+    margin-top: 10px;
+    margin-bottom: 0%;
+}
+
+/* ------------------- SELECTOR ------------------- */
+
+.taipy-selector {
+    margin-top: 10px;
+    margin-bottom: 0%;
+}
+
+/* ------------------- NUMBER ------------------- */
+
+.taipy-number {
+    margin-top: 10px;
+    margin-bottom: 0%;
+}
+
+/* ------------------- DATE ------------------- */
+
+.taipy-date {
+    margin-top: 20px;
+    margin-bottom: 0%;
+}
+
+/* ------------------- TABLE ------------------- */
+
+.taipy-table {
     width: 100%;
     display: block;
     box-sizing: border-box;
     padding: 10px 10px;
     text-align: center;
     border: none;
-    border-radius: 20px;
+    font-size: 4px;
 }
+
+.taipy-table th, 
+.taipy-table td {
+    padding: 1px 1px !important;
+    max-width: 100px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+/* Header styling */
+.taipy-table thead th {
+    background-color: #152335 !important; /* Change this to your desired header background color */
+    color: white !important; /* Change this to your desired header text color */
+    font-weight: bold !important;
+    padding: 8px 1px !important; /* Increased padding for better readability */
+}
+
+/* Footer styling */
+.taipy-table tfoot td {
+    background-color: #152335 !important; /* Change this to your desired footer background color */
+    color: #333 !important; /* Change this to your desired footer text color */
+    font-weight: bold !important;
+    padding: 2px 1px !important; /* Increased padding for better readability */
+}
+
+/* Hover effect for better user experience */
+.taipy-table tbody tr:hover {
+    background-color: #152335 !important; /* Light blue background on hover */
+}
+
+/* ------------------- FORM ------------------- */
+
+/* ------------------- CHART ------------------- */
+
+.taipy-chart {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    font-size: 4px;
+}
+
+.taipy-chart th, .taipy-chart td {
+    max-width: 100px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
