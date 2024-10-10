@@ -223,4 +223,19 @@ def get_strategy_perfs(portfolio_list, startAnalysisDate, rfrValue, periodDomain
                                     min_max_s[1])
         perfs = pd.concat([perfs, perf])
 
-    return perfs
+    print(perfs)
+
+    summary = pd.DataFrame([sum(perfs["probability_of_profit"])], columns=["probability_of_profit"])
+    summary["profit_ranges_min"] = [min(perfs["profit_ranges_min"])]
+    summary["profit_ranges_max"] = [max(perfs["profit_ranges_max"])]
+    summary["strategy_cost"] =  [sum(perfs["strategy_cost"])]
+    summary["minimum_return_in_the_domain"] = [min(perfs["minimum_return_in_the_domain"])]
+    summary["maximum_return_in_the_domain"] = [max(perfs["maximum_return_in_the_domain"])]
+    summary["delta"] = [sum(perfs["delta"])]
+    summary["gamma"] = [sum(perfs["gamma"])]
+    summary["theta"] = [sum(perfs["theta"])]
+    summary["vega"] = [sum(perfs["vega"])]
+
+    print(summary)
+
+    return summary

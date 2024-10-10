@@ -81,8 +81,8 @@ def create_plot(data, x_column, y_column, color_column, line_type_column, x_titl
         margin=dict(
             l=30, 
             r=10, 
-            t=10, 
-            b=10),  # Marges gauche, droite, haut et bas
+            t=30, 
+            b=20),  # Marges gauche, droite, haut et bas
         paper_bgcolor='rgba(255, 255, 255, 0)',  # Transparent
         plot_bgcolor='rgba(255, 255, 255, 0)',    # Transparent
         xaxis_title_font=dict(size=13),  # X-axis title font size

@@ -53,6 +53,7 @@ hr {
 
 /* ------------------- CONTAINER WITH INSIDE CENTERED ------------------- */ 
 
+
 .container-centered {
     overflow: hidden;
     /* background-color: rgba(255, 255, 255, 0.089); */
@@ -60,7 +61,7 @@ hr {
 
 .container-centered > * {
     width: 96%; /* Make all direct children full-width */
-    margin: 2% 2%; /* Add some vertical spacing between elements */
+    margin: 0% 0%; /* Add some vertical spacing between elements */
     margin-left: auto; /* Center the element */
     margin-right: auto; /* Center the element */
     
@@ -74,7 +75,8 @@ hr {
 
 .container-paddingvertical {
     overflow: hidden;
-    padding: 0.1vw 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
     /* background-color: rgba(255, 255, 255, 0.089); => for dev puropse */ 
 }
 
@@ -186,7 +188,7 @@ hr {
 
 .taipy-expandable {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 .taipy-expandable-content {
@@ -194,15 +196,14 @@ hr {
     display: none;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 0px;
+    padding-top: 0px;
 }
 
 .taipy-expandable-content.active {
     display: block;
-    margin-top: 10px;
-    padding-top: 10px;
-
+    margin-top: 0px;
+    padding-top: 0px;
 }
 
 
@@ -230,9 +231,12 @@ hr {
 /* ------------------- DATE ------------------- */
 
 .taipy-date {
-    margin-top: 20px;
-    margin-bottom: 0%;
+    margin-top: 0px;
+    padding-top:10px;
+    margin-bottom: 0px;
 }
+
+.taipy-
 
 /* ------------------- TABLE ------------------- */
 
@@ -275,7 +279,22 @@ hr {
     background-color: #152335 !important; /* Light blue background on hover */
 }
 
-/* ------------------- FORM ------------------- */
+/* ------------------- KYC ------------------- */
+
+.kpi-indicator {
+    background-color: #1f2f44;
+    border-radius: 7px;
+    padding: 12px 20px;
+    margin: 5px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-indicator .label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
 
 /* ------------------- CHART ------------------- */
 
@@ -296,3 +315,11 @@ hr {
     overflow: hidden !important;
 }
 
+
+/* -------------------- TEXT --------------------- */
+
+.inline-label-value {
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}

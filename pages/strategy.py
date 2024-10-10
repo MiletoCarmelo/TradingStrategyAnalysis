@@ -225,26 +225,25 @@ navbar = """
 ---
 |>
 
-<|container container-centered navbar|
+<|part|class_name=container-paddingvertical|
 <|Portfolio|expandable|expanded=False|
 <|{ticker_selected}|selector|type=str|lov={tickers_list}|adapter={lambda u: u}|dropdown=True|label=Portfolio|>
+<|part|class_name=container-paddingvertical|
 <|{start_date}|date|label=Start Date|>
+|>
 <|{end_date}|date|label=End Date|>
+
 <|{interval}|selector|type=str|lov={intervals}|adapter={lambda u: u}|dropdown=True|label=Interval|>
 ---
 <|UPDATE|button|on_action=pipeline|>
 |> 
 |>
 
-|>
-
 <|container container-padding_vertical|
 ---
 |>
 
-<|container container-centered navbar|
-
-<|container container-centered navbar|
+<|part|class_name=container-paddingvertical|
 <|Technical indicators|expandable|expanded=False|
 <|{ta}|selector|type=str|lov={ta_list}|adapter={lambda u: u}|dropdown=True|label=Technical Indicator|>
 <|{window}|input|label=Window|>
@@ -261,7 +260,7 @@ navbar = """
 ---
 |>
 
-<|container container-centered navbar|
+<|part|class_name=container-paddingvertical|
 <|TI on chart|expandable|expanded=False|
 <|{ti_list_selected}|selector|type=str|lov={ti_list}|adapter={lambda u: u}|dropdown=False|multiple=True|mode=check|on_change=update_plot|>
 |>
@@ -291,7 +290,9 @@ strategy = Markdown("""
 ## TECHNICAL INDICATORS ANALYSIS
 |>
 |>
+<|part|class_name=container-paddingvertical|
 <|chart|figure={plot_price_and_ta}|height=800px|>
+|>
 |>
 
     |>

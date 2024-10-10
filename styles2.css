@@ -156,8 +156,8 @@ hr {
     width: 100%;
     display: block;
     box-sizing: border-box;
-    margin-bottom: 2%;
-    margin-top: 2%;
+    margin-bottom: 10px;
+    margin-top: 10px;
     text-align: center;
     background-color: #007bff;  /* You can change this to match your color scheme */
     color: white;

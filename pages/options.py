@@ -68,8 +68,7 @@ period_domain = ['1d', '1wk', '1mo', '6mo', '1y']
 period_domain_sel = '1y'
 
 probability_of_profit = None
-profit_ranges_min = None
-profit_ranges_max = None
+profit_ranges = None
 strategy_cost = None
 minimum_return_in_the_domain = None
 maximum_return_in_the_domain = None
@@ -302,7 +301,7 @@ def update_plot_playoff(state, data_payoff, data_portfolio, min_max_s):
                                             line_type_column='line_type', 
                                             x_title=None, 
                                             y_title=None, 
-                                            title=None)
+                                            title="Payoff")
 
 
 def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
@@ -360,7 +359,9 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         line_type_column='line_type', 
                                         # x_title="S", 
                                         # y_title="Delta", 
-                                        title=None, 
+                                        x_title=None, 
+                                        y_title=None, 
+                                        title="Delta", 
                                         legend=True)
 
         plot_gamma = plt.create_plot(   data=gamma_df, 
@@ -369,8 +370,10 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         color_column='id', 
                                         line_type_column='line_type', 
                                         # x_title="S", 
-                                        # y_title="Gamma", 
-                                        title=None, 
+                                        # y_title="Gamma",
+                                        x_title=None, 
+                                        y_title=None,  
+                                        title="Gamma", 
                                         legend=True)
 
         plot_vega = plt.create_plot(    data=vega_df, 
@@ -380,7 +383,9 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         line_type_column='line_type', 
                                         # x_title="S", 
                                         # y_title="Vega", 
-                                        title=None, 
+                                        x_title=None, 
+                                        y_title=None, 
+                                        title="Vega", 
                                         legend=True)
 
         plot_theta = plt.create_plot(   data=theta_df, 
@@ -390,7 +395,7 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         line_type_column='line_type', 
                                         # x_title="S", 
                                         # y_title="Theta", 
-                                        title=None,
+                                        title="Theta",
                                         legend=True)
 
         plot_rho = plt.create_plot(     data=rho_df,
@@ -400,7 +405,9 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         line_type_column='line_type',
                                         # x_title="S",
                                         # y_title="Rho",
-                                        title=None,
+                                        x_title=None, 
+                                        y_title=None, 
+                                        title="Rho",
                                         legend=True)
 
         for i in range(len(data_portfolio)):
@@ -442,40 +449,39 @@ def update_states_variables_pipeline(state, data_payoff, data_portfolio, min_max
     notify(state, "success", f"Greeks plot updated")
     # update performances table :
     state.data_performanes = opt.get_strategy_perfs(state.data_portfolio, state.start_analysis_date, state.rfr_value, state.period_domain_sel)
-    
-    print(state.data_performanes)
 
-    state.probability_of_profit = state.data_performanes["probability_of_profit"][0]
-    state.profit_ranges_min = state.data_performanes["profit_ranges_min"][0]
-    state.profit_ranges_max = state.data_performanes["profit_ranges_max"][0]
-    state.strategy_cost = state.data_performanes["strategy_cost"][0]
-    state.minimum_return_in_the_domain = state.data_performanes["minimum_return_in_the_domain"][0]
-    state.maximum_return_in_the_domain = state.data_performanes["maximum_return_in_the_domain"][0]
-    state.delta = state.data_performanes["delta"][0]
-    state.gamma = state.data_performanes["gamma"][0]
-    state.theta = state.data_performanes["theta"][0]
-    state.vega = state.data_performanes["vega"][0]
+    state.probability_of_profit = str(round(state.data_performanes["probability_of_profit"][0],2))
+    state.profit_ranges = str(round(state.data_performanes["profit_ranges_min"][0],2)) + "-" + str(round(state.data_performanes["profit_ranges_max"][0],2))
+    state.strategy_cost = str(round(state.data_performanes["strategy_cost"][0],2))
+    state.minimum_return_in_the_domain = str(round(state.data_performanes["minimum_return_in_the_domain"][0],2))
+    state.maximum_return_in_the_domain = str(round(state.data_performanes["maximum_return_in_the_domain"][0],2))
+    state.delta = str(round(state.data_performanes["delta"][0],2))
+    state.gamma = str(round(state.data_performanes["gamma"][0],2))
+    state.theta = str(round(state.data_performanes["theta"][0],2))
+    state.vega = str(round(state.data_performanes["vega"][0],2))
+
+    print(state.probability_of_profit)
+    print(state.profit_range)
+    print(state.strategy_cost)
+    print(state.minimum_return_in_the_domain)
+    print(state.maximum_return_in_the_domain)
+    print(state.delta)
+    print(state.gamma)
+    print(state.theta)
+    print(state.vega)
 
 
 # Define the option page content
 option_page = """
-
 <|{callput_value}|toggle|lov=CALL;PUT|>
 
-<|container-paddingvertical|
-|>
-
 <|{expiration_dates_sel}|selector|type=str|lov={expiration_dates}|adapter={lambda u: u}|dropdown=True|label=Expiration dates|>
-
-<|container-paddingvertical|
-|>
 
 <|{rfr_value}|number|label=Risk-Free Rate|>
 
 ---
 
 <|Update list|button||on_action=update_option_table|>
-
 """
 
 # Define the stock page content
@@ -485,6 +491,47 @@ stock_page = """
 ---
 
 <|Update list|button|on_action=update_stock_table|>
+"""
+
+navbar = """
+
+<|container container-centered navbar|
+
+<|RESET|button|class_name=taipy-button large_height|on_action=reset_tables|>
+
+<|container container-padding_vertical|
+---
+|>
+
+<|{ticker}|input|label=Select a ticker|on_change=update_expiration_dates|on_action=update_expiration_dates|>
+
+<|{shortlong_value}|toggle|lov=LONG;SHORT|>
+
+<|container container-padding_vertical|
+---
+|>
+
+<|part|class_name=container-paddingvertical|
+<|Option|expandable|expanded=False|
+""" + option_page + """ 
+|>
+
+|> 
+
+<|part|class_name=container-paddingvertical|
+<|Stock|expandable|expanded=False|
+""" + stock_page + """
+|>
+
+|>
+
+<|container container-padding_vertical|
+---
+|> 
+
+<|{min_max_s}|slider|min={min_max_s[0]}|max={min_max_s[1]}|on_change=update_plot_playoff|labels=S range|>
+
+|>
 """
 
 tables = """
@@ -522,6 +569,7 @@ greeks_page = """
     <|
 <|chart|figure={plot_theta}|height=250px|>
     |>
+
 |>
 """
 
@@ -529,105 +577,133 @@ greeks_page = """
 # <|chart|figure={plot_rho}|>
 #    |>
 
-
-
-options = Markdown("""
-
-<|layout|columns=1 9|
-
-    <|
-
-<|container container-centered navbar|
-
-<|RESET|button|class_name=taipy-button large_height|on_action=reset_tables|>
-
-<|container container-padding_vertical|
----
-|>
-
-<|{ticker}|input|label=Select a ticker|on_change=update_expiration_dates|on_action=update_expiration_dates|>
-
-<|{shortlong_value}|toggle|lov=LONG;SHORT|>
-
-<|container container-padding_vertical|
----
-|>
-
-<|container container-centered navbar|
-
-<|Option|expandable|expanded=False|
-""" + option_page + """ 
-|>
-
-|> 
-
-<|container container-centered navbar|
-
-<|Stock|expandable|expanded=False|
-""" + stock_page + """
-|>
-
-|>
-
-<|container container-padding_vertical|
----
-|> 
-
-<|{min_max_s}|slider|min={min_max_s[0]}|max={min_max_s[1]}|on_change=update_plot_playoff|labels=S range|>
-
-|>
-
-    |>
-
-    <|
-    
+kpi = """
 
 <|part|class_name=full-width-container|
-<|part|
-<|part|class_name=full-width-container title|
-## Options Profit Calculator
-|>
-|>
-
-<|container container-centered|
-<|Tables instruments input|expandable|expanded=False|
-""" + tables + """
-|>
-|>
-
-<|layout|columns=9 1|
-
-    <|
-<|chart|figure={plot_payoff}|>
-    |>
-
-    <|
-<|part|class_name=full-width-container|
-<|part|
 <|{period_domain_sel}|selector|type=str|lov={period_domain}|adapter={lambda u: u}|dropdown=True|label=Period domain|>
-<|{start_analysis_date}|date|label=Start analysis date|>
 |>
+<|part|class_name=full-width-container|
+<|{start_analysis_date}|date|label=Start analysis date|>
 |>
 
 <|container container-padding_vertical|
 --- 
 |> 
 
-<|container container-centered|
-<|part|
-**Probability of Profit:** <|{probability_of_profit}|text|>  
-**Profit range:** <|{profit_ranges_min}|text|> to <|{profit_ranges_max}|text|>  
-**Strategy cost:** <|{strategy_cost}|text|>  
-**Return in domain:** <|{minimum_return_in_the_domain}|text|> to <|{maximum_return_in_the_domain}|text|>  
-**Greeks:**  
-- Delta: <|{delta}|text|>  
-- Gamma: <|{gamma}|text|>  
-- Theta: <|{theta}|text|>  
-- Vega: <|{vega}|text|> 
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+Profit
 |>
-|> 
+<|part|class_name=inline-label-value|
+<|part|class_name=label|
+<|Prob: {probability_of_profit}|text|> 
+|>
+|>
+<|part|class_name=inline-label-value|
+<|part|class_name=label|
+<|Range: {profit_ranges}|text|> 
+|>
+|>
+|>
+|>
 
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+<|Cost: {strategy_cost}|text|> 
+|>
+|>
+|>
+
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+Domain return
+|>
+<|part|class_name=label|
+<|{minimum_return_in_the_domain} - {maximum_return_in_the_domain}|text|>  
+|>
+|>
+|>
+
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+<|Delta: {delta}|text|>  
+|>
+|>
+|>
+
+
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+<|Gamma: {gamma}|text|>
+|>
+|>
+|>
+
+
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+<|Theta: {theta}|text|>
+|>
+|>
+|>
+
+
+<|part|class_name=full-width-container|
+<|part|class_name=kpi-indicator|
+<|part|class_name=label|
+<|Vega: {vega}|text|> 
+|>
+|>
+|>
+"""
+
+options = Markdown("""
+
+<|layout|columns=1 9|
+
+    <|
+""" + navbar + """
     |>
+
+    <|
+    
+<|layout|columns=1|
+
+<|part|class_name=full-width-container|
+
+<|part|
+<|part|class_name=full-width-container title|
+## Options Profit Calculator
+|>
+|>
+
+<|part|class_name=container-paddingvertical|
+<|Tables instruments input|expandable|expanded=False|
+""" + tables + """
+|>
+|>
+
+|>
+
+|>
+
+
+<|layout|columns=9 1|
+    <|
+
+<|part|class_name=full-width-container|
+
+<|chart|figure={plot_payoff}|>
+
+|>
+
+<|part|class_name=full-width-container|
 
 """ + greeks_page + """
 
@@ -635,7 +711,16 @@ options = Markdown("""
 
     |>
 
+    <|
+""" + kpi + """
+    |>
+
 |>
+    |>
+
+
+|>
+
 """)
 
 
