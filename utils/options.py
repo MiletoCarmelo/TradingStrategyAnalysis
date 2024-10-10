@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import utils.yahoo as yf
+from datetime import datetime
+import optionlab as ol
 
 
 def get_payoff_options(stock_price, strike_price, option_price, longShort, callPut):
@@ -125,3 +127,100 @@ def add_payoff_total(df, groupby_column="greek", price_colum="s", payoff_colum="
     combined_df = pd.concat([df, result], ignore_index=True)
 
     return combined_df
+
+
+def get_indelying_perf(ticker, sharePerContract, quantity, ls, cp, strike, tickerPrice, lastPrice, startAnalysisDate, expirationDate, volatility, rfrValue, minStock, maxStock,  date_start=None):
+
+    
+    if rfrValue > 0.2: 
+        rfrValue = rfrValue / 100
+
+    if startAnalysisDate is None:
+        startAnalysisDate = datetime.now().strftime("%Y-%m-%d")
+
+    input_data = {
+        "stock_price": tickerPrice,
+        "start_date": startAnalysisDate,
+        "target_date": expirationDate,
+        "volatility": volatility,
+        "interest_rate": rfrValue,
+        "min_stock": minStock,
+        "max_stock": maxStock,
+        "strategy": [
+            {
+                "type": cp.lower(),
+                "strike": strike,
+                "premium": lastPrice,
+                "n": sharePerContract,
+                "action": "buy" if ls.lower() == "long" else "sell"
+            },
+        ],
+    }
+
+    out = ol.run_strategy(input_data)
+
+    # Calculating means
+    mean_implied_volatility = sum(out.implied_volatility) / len(out.implied_volatility)
+    mean_in_the_money_probability = sum(out.in_the_money_probability) / len(out.in_the_money_probability)
+
+    i = 0
+    total_delta = out.delta[i] * quantity * sharePerContract
+    total_gamma = out.gamma[i] * quantity * sharePerContract
+    total_theta = out.theta[i] * quantity * sharePerContract
+    total_vega = out.vega[i] * quantity * sharePerContract
+
+    # Failed to add instrument to portfolio: If using all scalar values, you must pass an index
+
+    profit_ranges = out.profit_ranges # [(233.81, inf)]
+    # Summary output
+    summary = pd.DataFrame([out.probability_of_profit], columns=["probability_of_profit"])
+    summary["profit_ranges_min"] = out.profit_ranges[0][0]
+    summary["profit_ranges_max"] = out.profit_ranges[0][1]
+    summary["strategy_cost"] = out.strategy_cost
+    summary["minimum_return_in_the_domain"] = out.minimum_return_in_the_domain
+    summary["maximum_return_in_the_domain"] = out.maximum_return_in_the_domain
+    summary["delta"] = total_delta
+    summary["gamma"] = total_gamma
+    summary["theta"] = total_theta
+    summary["vega"] = total_vega
+
+    #   Variable	                Type	        Aggregation
+    #   Per Leg Cost	            Cost	        Sum
+    #   Implied Volatility	        Percentage	    Mean
+    #   In-the-Money Probability	Probability	    Mean
+    #   Delta	                    Sensitivity	    Sum
+    #   Gamma	                    Sensitivity	    Sum
+    #   Theta	                    Sensitivity	    Sum
+    #   Vega	                    Sensitivity	    Sum
+    #   Probability of Profit	    Probability	    Mean
+    #   Profit Ranges	            Profit	        List
+
+    return summary
+
+
+def get_strategy_perfs(portfolio_list, startAnalysisDate, rfrValue, periodDomain="1y"):
+
+    perfs = pd.DataFrame()
+
+    # Failed to add instrument to portfolio: 'list' object has no attribute 'lower'
+    
+    for i in range(len(portfolio_list)):
+        row = portfolio_list.iloc[i]
+        min_max_s = yf.get_stock_min_max(row.ticker,period=periodDomain)
+        perf = get_indelying_perf(  row.ticker,
+                                    row.shares, 
+                                    row.quantity,
+                                    row.ls,
+                                    row.cp,
+                                    row.strike,
+                                    row.tickerPrice, 
+                                    row.lastPrice,
+                                    startAnalysisDate, 
+                                    row.expirationDate, 
+                                    yf.calculate_volatility(row.ticker, period=periodDomain),
+                                    rfrValue, 
+                                    min_max_s[0],
+                                    min_max_s[1])
+        perfs = pd.concat([perfs, perf])
+
+    return perfs

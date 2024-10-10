@@ -170,14 +170,11 @@ def get_risk_free_rate(period="1y"):
 def get_stock_min_max(ticker, period='1y'):
     # Fetch the stock data
     stock = yf.Ticker(ticker)
-    
     # Get historical stock data
     stock_data = stock.history(period=period)
-    
     # Calculate the minimum and maximum stock prices
     min_stock_price = stock_data['Low'].min()
     max_stock_price = stock_data['High'].max()
-    
     return min_stock_price, max_stock_price
 
 if __name__ == "__main__":

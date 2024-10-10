@@ -30,7 +30,7 @@ column_names = ['type', 'currency', 'ticker',
                 'bid', 'ask', 'volume', 'openInterest', 'impliedVolatility', 
                 'inTheMoney', 'contractSize', 'expirationDate', 'tickerPrice', 'contractSymbol']
 
-column_names_portfolio = [  'show', 'id', 'quantity', 'type', 'ticker', 
+column_names_portfolio = [  'show', 'id', 'quantity', 'shares', 'type', 'ticker', 
                             'ls', 'cp', 'expirationDate', 'inTheMoney', 'strike', 'lastPrice', 
                             'tickerPrice', 'currency', 'volume', 
                             'contractSize', 'contractSymbol']
@@ -63,6 +63,20 @@ plot_vega = None
 plot_theta = None
 plot_rho = None
 data_performanes = pd.DataFrame(columns=["Performance", "Value"])
+start_analysis_date = datetime.today().date()
+period_domain = ['1d', '1wk', '1mo', '6mo', '1y']
+period_domain_sel = '1y'
+
+probability_of_profit = None
+profit_ranges_min = None
+profit_ranges_max = None
+strategy_cost = None
+minimum_return_in_the_domain = None
+maximum_return_in_the_domain = None
+delta = None
+gamma = None
+theta = None
+vega = None
 
 
 # functions for the inputs tools (vertical left bar)
@@ -119,6 +133,7 @@ def update_portfolio_table(state, var_name, payload):
         data_portfolio_tmp = data_portfolio_tmp.reset_index(drop=True)
         data_portfolio_tmp.loc[:,"id"] = 0
         data_portfolio_tmp.loc[:, "quantity"] = 1
+        data_portfolio_tmp.loc[:, "shares"] = 100
         data_portfolio_tmp.loc[:,"show"] = True
         if data_portfolio_tmp["contractSymbol"][0] in state.data_portfolio["contractSymbol"].values:
             notify(state, "warning", f'Selected instrument already in portfolio')
@@ -302,7 +317,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
         # Create the plot
         for i in range(len(data_portfolio)):
             row = data_portfolio.iloc[i]
-            print(row)
             greeks_tmp = gr.get_greek_curve(    ticker=row.ticker,
                                                 type=row.type,
                                                 ls=row.ls,
@@ -312,7 +326,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                                 risk_free_rate=risk_free_rate,
                                                 min_s=min_value,
                                                 max_s=max_value)
-            print(" => ", i)
             greeks_tmp['contractSymbol'] = row.contractSymbol
             greeks_tmp['id'] = row.id
             greeks_tmp['line_type'] = 'dash'
@@ -325,9 +338,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                             payoff_colum="value", 
                                             id_column="id")
 
-        print(data_greeks)
-
-        print("2")
         # get greeks data 
         delta_df = data_greeks[data_greeks["greek"]=="delta"]
         gamma_df = data_greeks[data_greeks["greek"]=="gamma"]
@@ -342,7 +352,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
         theta_df = theta_df.reset_index(drop=True)
         rho_df = rho_df.reset_index(drop=True)
 
-        print("3")
         # generate the plot
         plot_delta = plt.create_plot(   data=delta_df, 
                                         x_column='s', 
@@ -394,7 +403,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                                         title=None,
                                         legend=True)
 
-        print("4")
         for i in range(len(data_portfolio)):
             row = data_portfolio.iloc[i]
             # if row.tickerPrice > min_value and row.tickerPrice < max_value:
@@ -406,8 +414,6 @@ def update_greeks_plot(state, data_greeks, data_portfolio, risk_free_rate):
                     plot_vega = plt.add_vertical_bar(plot_vega, x_value=row.strike, info="k" + str(row.id), color_id_nb=i, legend=True)
                     plot_theta = plt.add_vertical_bar(plot_theta, x_value=row.strike, info="k" + str(row.id), color_id_nb=i, legend=True)
                     plot_rho = plt.add_vertical_bar(plot_rho, x_value=row.strike, info="k" + str(row.id), color_id_nb=i, legend=True)
-
-        print("5")
 
         state.plot_delta = plot_delta
         state.plot_gamma = plot_gamma
@@ -434,7 +440,21 @@ def update_states_variables_pipeline(state, data_payoff, data_portfolio, min_max
     #  update greeks plots:
     update_greeks_plot(state, data_greeks, data_portfolio, rfr_value)
     notify(state, "success", f"Greeks plot updated")
+    # update performances table :
+    state.data_performanes = opt.get_strategy_perfs(state.data_portfolio, state.start_analysis_date, state.rfr_value, state.period_domain_sel)
     
+    print(state.data_performanes)
+
+    state.probability_of_profit = state.data_performanes["probability_of_profit"][0]
+    state.profit_ranges_min = state.data_performanes["profit_ranges_min"][0]
+    state.profit_ranges_max = state.data_performanes["profit_ranges_max"][0]
+    state.strategy_cost = state.data_performanes["strategy_cost"][0]
+    state.minimum_return_in_the_domain = state.data_performanes["minimum_return_in_the_domain"][0]
+    state.maximum_return_in_the_domain = state.data_performanes["maximum_return_in_the_domain"][0]
+    state.delta = state.data_performanes["delta"][0]
+    state.gamma = state.data_performanes["gamma"][0]
+    state.theta = state.data_performanes["theta"][0]
+    state.vega = state.data_performanes["vega"][0]
 
 
 # Define the option page content
@@ -575,13 +595,38 @@ options = Markdown("""
 |>
 |>
 
-<|layout|columns=8 2|
+<|layout|columns=9 1|
 
     <|
 <|chart|figure={plot_payoff}|>
     |>
+
     <|
-<|table|data={data_performanes}|page_size=10|page_size_options=10|>
+<|part|class_name=full-width-container|
+<|part|
+<|{period_domain_sel}|selector|type=str|lov={period_domain}|adapter={lambda u: u}|dropdown=True|label=Period domain|>
+<|{start_analysis_date}|date|label=Start analysis date|>
+|>
+|>
+
+<|container container-padding_vertical|
+--- 
+|> 
+
+<|container container-centered|
+<|part|
+**Probability of Profit:** <|{probability_of_profit}|text|>  
+**Profit range:** <|{profit_ranges_min}|text|> to <|{profit_ranges_max}|text|>  
+**Strategy cost:** <|{strategy_cost}|text|>  
+**Return in domain:** <|{minimum_return_in_the_domain}|text|> to <|{maximum_return_in_the_domain}|text|>  
+**Greeks:**  
+- Delta: <|{delta}|text|>  
+- Gamma: <|{gamma}|text|>  
+- Theta: <|{theta}|text|>  
+- Vega: <|{vega}|text|> 
+|>
+|> 
+
     |>
 
 """ + greeks_page + """
