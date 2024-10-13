@@ -15,7 +15,7 @@ env:
 permissions:
   contents: read  # Allows reading files from the repository
   packages: write  # Allows pushing images to the GitHub Container Registry
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY_NAME }}
           username: ${{ env.REGISTRY_USERNAME }}
-          token: ${{ env.REGISTRY_PASSWORD }}
+          password: ${{ env.REGISTRY_PASSWORD }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
