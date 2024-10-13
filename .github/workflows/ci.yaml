@@ -1,14 +1,41 @@
-name: Prefix (baseURL) Test
-runs:
-  using: "composite"
-  steps:
-    - name: Build the Docker image
-      shell: bash
-      working-directory: ./tools/gui/docker/nginx-prefix
-      run: docker build . --file Dockerfile --tag taipy-nginx-proxy
-    - name: run nginx reverse proxy docker container
-      shell: bash
-      run: docker run -d -p 4000:4000 taipy-nginx-proxy
-    - name: run pytest with prefix configuration
-      shell: bash
-      run: pipenv run pytest -m "teste2e" tests/gui/e2e --e2e-base-url="/prefix/" --e2e-port="4000"
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - prod
+
+env:
+  REGISTRY_NAME: ghcr.io
+  REGISTRY_USERNAME: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  IMAGE_NAME: ${{ github.repository }}  # This will be in the format "owner/repo"
+  IMAGE_TAG: latest
+
+permissions:
+  contents: read  # Allows reading files from the repository
+  packages: write  # Allows pushing images to the GitHub Container Registry
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY_NAME }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          token: ${{ env.REGISTRY_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
