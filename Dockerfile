@@ -7,7 +7,7 @@ USER taipy
 
 # Go to the dedicated folder and add the python corresponding folder in PATH
 WORKDIR /
-ENV PATH="${PATH}:/.local/bin"
+# ENV PATH="${PATH}:/.local/bin"
 
 # Copy dependency files and source code
 COPY --chown=taipy:taipy ./pyproject.toml ./poetry.lock* ./
