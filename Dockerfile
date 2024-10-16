@@ -1,3 +1,4 @@
+#Your Python version
 FROM python:3.11.9 as taipy
 
 # Web port of the application
@@ -19,7 +20,7 @@ COPY . .
 RUN python -m pip install --upgrade pip
 
 # Install Poetry and dependencies
-RUN pip install poetry
+RUN python -m pip install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install 
 
