@@ -1,24 +1,16 @@
 FROM python:3.11.9
 
-# Create taipy user for security
-RUN groupadd -r taipy && useradd -r -m -g taipy taipy
 
 # Set working directory
-WORKDIR /
+WORKDIR /app
 
 # Copy dependency files and source code
-COPY --chown=taipy:taipy ./pyproject.toml ./poetry.lock* ./
-COPY --chown=taipy:taipy . .
-
-# Switch to taipy user
-USER taipy
-
-# Set PATH for taipy user
-ENV PATH="/home/taipy/.local/bin:${PATH}"
+COPY ./pyproject.toml ./poetry.lock* ./
+COPY . .
 
 # Update pip and install Poetry
-RUN pip install --user --upgrade pip && \
-    pip install --user poetry
+RUN pip install --upgrade pip && \
+    pip install poetry
 
 # Install dependencies
 RUN poetry config virtualenvs.create false && \
