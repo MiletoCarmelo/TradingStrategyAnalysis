@@ -17,8 +17,11 @@ COPY --chown=taipy:taipy . .
 USER taipy
 
 # Update pip and install poetry
-RUN pip install --upgrade pip
-RUN pip install poetry
+RUN pip install --user --upgrade pip
+RUN pip install --user poetry
+
+# Add Poetry to PATH
+ENV PATH="/home/taipy/.local/bin:${PATH}"
 
 # Install Poetry and dependencies
 RUN poetry config virtualenvs.create false
