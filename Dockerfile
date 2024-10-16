@@ -25,7 +25,7 @@ ENV PATH="/home/taipy/.local/bin:${PATH}"
 
 # Install Poetry and dependencies
 RUN poetry config virtualenvs.create false
-RUN poetry install  --no-root
+RUN poetry install
 
 # Web port of the application
 EXPOSE 5000
