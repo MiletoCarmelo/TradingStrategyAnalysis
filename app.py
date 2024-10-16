@@ -36,7 +36,7 @@ gui = Gui(pages=pages, css_file="styles.css")
 gui.add_page("root", layout)
 
 # Define a WSGI-compatible application
-app = gui.run.run
+app = gui.run
 
 if __name__ == "__main__":
     # gui.run(debug=True, dark_mode=True, use_reloader=True, title="Strategies creator")
