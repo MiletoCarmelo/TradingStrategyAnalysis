@@ -24,4 +24,4 @@ EXPOSE 5000
 # CMD ["poetry", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
 
 # Start up command
-ENTRYPOINT [ "poetry", "run", "python", "app.py", "-P", "5000", "-H", "0.0.0.0", "--no-reloader" ]
+ENTRYPOINT [ "poetry", "run", "python", "app.py", "-P", "5000", "-H", "http://0.0.0.0", "--no-reloader" ]
