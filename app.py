@@ -39,5 +39,5 @@ gui.add_page("root", layout)
 app = gui.run
 
 if __name__ == "__main__":
-    # gui.run(debug=True, dark_mode=True, use_reloader=True, title="Strategies creator")
-    gui.run(debug=True, host='0.0.0.0', port=5000, title="Strategies creator")
+    gui.run(debug=True, dark_mode=True, use_reloader=True, title="Strategies creator", port=5000, host=0.0.0.0)
+    # gui.run(title="Strategies creator")
