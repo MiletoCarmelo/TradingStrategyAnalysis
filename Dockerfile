@@ -1,9 +1,6 @@
 #Your Python version
 FROM python:3.11.9
 
-# Web port of the application
-EXPOSE 5000
-
 # Create taipy user for security
 RUN groupadd -r taipy && useradd -r -m -g taipy taipy
 USER taipy
@@ -13,17 +10,22 @@ WORKDIR /
 ENV PATH="${PATH}:/.local/bin"
 
 # Copy dependency files and source code
-COPY ./pyproject.toml ./poetry.lock* ./
-COPY . .
+COPY --chown=taipy:taipy ./pyproject.toml ./poetry.lock* ./
+COPY --chown=taipy:taipy . .
 
-# Update pip
-RUN python -m pip install --upgrade pip
+# Switch to taipy user
+USER taipy
+
+# Update pip and install poetry
+RUN pip install --upgrade pip
+RUN pip install poetry
 
 # Install Poetry and dependencies
-RUN python -m pip install poetry
 RUN poetry config virtualenvs.create false
-RUN poetry install 
+RUN poetry install  --no-root
 
+# Web port of the application
+EXPOSE 5000
 
 # Set the command to run your application -- development
 # CMD ["poetry", "run", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
