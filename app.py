@@ -47,6 +47,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the application")
     parser.add_argument("-H", "--host", type=str, default="0.0.0.0", help="Host to run the application on")
     parser.add_argument("-P", "--port", type=int, default=8080, help="Port to run the application on")
+    parser.add_argument("-B", "--base_url", type=str, default="/trading-strategy-analysis", help="Base URL for the application")
     parser.add_argument("--no-reloader", action="store_true", help="Disable the reloader")
     args = parser.parse_args()
 
