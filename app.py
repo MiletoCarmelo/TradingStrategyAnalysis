@@ -6,6 +6,9 @@ from pages.settings import settings
 from navigation import layout, on_navigate
 import pandas as pd 
 
+import sys
+import argparse
+
 # create a navbar : 
 # root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('home', 'Home'), ('strategy', 'Technical indicators'), ('options', 'Options'), ('settings', 'Settings')]}|on_action=on_menu|>"
 
@@ -40,4 +43,17 @@ app = gui.run
 
 if __name__ == "__main__":
     # gui.run(debug=True, dark_mode=True, use_reloader=True, title="Strategies creator")
-    gui.run(debug=True, title="Strategies creator", host="0.0.0.0", port=5000)
+
+    parser = argparse.ArgumentParser(description="Run the application")
+    parser.add_argument("-H", "--host", type=str, default="0.0.0.0", help="Host to run the application on")
+    parser.add_argument("-P", "--port", type=int, default=8080, help="Port to run the application on")
+    parser.add_argument("--no-reloader", action="store_true", help="Disable the reloader")
+    args = parser.parse_args()
+
+    gui.run(debug=True, title="Strategies creator", host=args.host, port=args.port, use_reloader=not args.no_reloader)
+
+
+# run the app in a production server by using : 
+
+# poetry run python app.py -H "0.0.0.0" -P "5000" -no-reloader
+# http://0.0.0.0:5000/ => then works on the browser
