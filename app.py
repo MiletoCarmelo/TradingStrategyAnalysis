@@ -9,6 +9,8 @@ import pandas as pd
 import sys
 import argparse
 
+from flask import redirect
+
 # create a navbar : 
 # root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('home', 'Home'), ('strategy', 'Technical indicators'), ('options', 'Options'), ('settings', 'Settings')]}|on_action=on_menu|>"
 
