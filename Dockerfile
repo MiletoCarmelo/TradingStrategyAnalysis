@@ -17,6 +17,8 @@ RUN poetry config virtualenvs.create false && \
 
 # Expose the port the app runs on
 EXPOSE 5000
+EXPOSE 8080
+EXPOSE 80
 
 # Start up command
 ENTRYPOINT [ "poetry", "run", "python", "app.py", "-H", "0.0.0.0", "-P", "80", "-B", "/trading-strategy-analysis", "--no-reloader" ]
