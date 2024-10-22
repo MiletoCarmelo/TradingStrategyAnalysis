@@ -16,8 +16,8 @@ RUN poetry config virtualenvs.create false && \
  poetry install --no-interaction --no-ansi
 
 # Expose the port the app runs on
-EXPOSE 5000
-EXPOSE 8080
+# EXPOSE 5000
+# EXPOSE 8080
 EXPOSE 80
 
 # Start up command
