@@ -1,4 +1,5 @@
-from taipy.gui import Gui, Config
+from taipy.gui import Gui
+from taipy.common.config import Config
 import os
 import argparse
 
