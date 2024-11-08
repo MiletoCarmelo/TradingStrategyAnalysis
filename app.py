@@ -5,7 +5,6 @@ from pages.options import options
 from pages.settings import settings
 from navigation import layout
 import pandas as pd 
-
 import sys
 import argparse
 
@@ -16,15 +15,12 @@ parser.add_argument("-P", "--port", type=int, default=8080, help="Port to run th
 parser.add_argument("-B", "--base_url", type=str, default="trading-strategy-analysis", help="Base URL for the application")
 parser.add_argument("--no-reloader", action="store_true", help="Disable the reloader")
 args = parser.parse_args()
-
 # Nettoyer le base_url
 base_url = args.base_url.strip('/')
 
 # create a navbar : 
 # root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('home', 'Home'), ('strategy', 'Technical indicators'), ('options', 'Options'), ('settings', 'Settings')]}|on_action=on_menu|>"
-
 root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('strategy', 'Technical indicators'), ('options', 'Options')]}|on_action=on_menu|>"
-
 
 def on_menu(state, var_name, info):
     page = info['args'][0]
@@ -46,6 +42,7 @@ pages = {
 }
 
 
+# Application WSGI
 gui = Gui(pages=pages, css_file="styles.css")
 gui.add_page("root", layout)
 
