@@ -1,62 +1,66 @@
-from taipy.gui import Gui
-from taipy.common.config import Config
-import os
+from taipy.gui import Gui, navigate, State
+from pages.home import home
+from pages.strategy import strategy
+from pages.options import options
+from pages.settings import settings
+from navigation import layout
+import pandas as pd 
+
+import sys
 import argparse
 
-def create_gui(base_url):
-    # Configuration de Taipy
-    config = Config()
-    config.http.base_pathname = base_url
-    config.http.static_directory = os.path.join(os.path.dirname(__file__), "static")
-    config.http.static_path = f"{base_url}static"  # Pas besoin de double slash
-    
-    # Définir les pages avec le bon mapping
-    root_md = f"""<|toggle|theme|>
-<|menu|label=Menu|lov={{[ 
-    ('{base_url}/strategy', 'Technical indicators'), 
-    ('{base_url}/options', 'Options')
-]}}|on_action=on_menu|>"""
-
-    pages = {
-        "/": root_md,
-        "strategy": strategy,
-        "options": options,
-    }
-
-    # Configuration des fichiers statiques
-    taipy_css = f"{base_url}/static/stylekit/stylekit.css"
-    custom_css = f"{base_url}/static/styles.css"
-
-    gui = Gui(pages=pages, css_files=[taipy_css, custom_css], config=config)
-    gui.add_page("root", layout)
-
-    return gui
-
+# Parser arguments
 parser = argparse.ArgumentParser(description="Run the application")
-parser.add_argument("-H", "--host", type=str, default="0.0.0.0")
-parser.add_argument("-P", "--port", type=int, default=80)
-parser.add_argument("-B", "--base_url", type=str, 
-                    default="/trading-strategy-analysis/")
-parser.add_argument("--no-reloader", action="store_true")
-
+parser.add_argument("-H", "--host", type=str, default="localhost", help="Host to run the application on")
+parser.add_argument("-P", "--port", type=int, default=8080, help="Port to run the application on")
+parser.add_argument("-B", "--base_url", type=str, default="trading-strategy-analysis", help="Base URL for the application")
+parser.add_argument("--no-reloader", action="store_true", help="Disable the reloader")
 args = parser.parse_args()
 
+# Nettoyer le base_url
+base_url = args.base_url.strip('/')
+
+# create a navbar : 
+# root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('home', 'Home'), ('strategy', 'Technical indicators'), ('options', 'Options'), ('settings', 'Settings')]}|on_action=on_menu|>"
+
+root_md="<|toggle|theme|>\n<|menu|label=Menu|lov={[ ('strategy', 'Technical indicators'), ('options', 'Options')]}|on_action=on_menu|>"
+
+
+def on_menu(state, var_name, info):
+    page = info['args'][0]
+    navigate(state, to=page)
+
+# Create and run the app
+#  pages = {
+#      "/": root_md,
+#      "home": home,
+#      "strategy": strategy,
+#      "analysis": analysis,
+#      "settings": settings
+#  }
+
+pages = {
+    "/": root_md,
+    "strategy": strategy,
+    "options": options,
+}
+
+
+gui = Gui(pages=pages, css_file="styles.css")
+gui.add_page("root", layout)
+
+# Define a WSGI-compatible application
+app = gui.run
+
 if __name__ == "__main__":
-    # Créer le dossier static s'il n'existe pas
-    os.makedirs("static/stylekit", exist_ok=True)
+    gui.run(debug=True, 
+            title="Strategies creator", 
+            host=args.host, 
+            port=args.port, 
+            use_reloader=not args.no_reloader)
 
-    # Déplacer les fichiers statiques dans le bon dossier
-    if not os.path.exists("static/styles.css"):
-        if os.path.exists("styles.css"):
-            os.rename("styles.css", "static/styles.css")
 
-    gui = create_gui(args.base_url)
-    gui.run(
-        debug=True,
-        title="Strategies creator",
-        host=args.host,
-        port=args.port,
-        use_reloader=not args.no_reloader
-    )
+# run the app in a production server by using : 
 
-app = create_gui(args.base_url).run
+# poetry run python app.py -H "0.0.0.0" -P "5000" -no-reloader
+# http://0.0.0.0:5000/ => then works on the browser
