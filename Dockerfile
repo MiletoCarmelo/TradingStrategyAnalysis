@@ -21,7 +21,7 @@ RUN poetry config virtualenvs.create false && \
 EXPOSE 80
 
 # Start up command
-ENTRYPOINT [ "poetry", "run", "python", "app.py", "-H", "0.0.0.0", "-P", "80", "-B", "/trading-strategy-analysis", "--no-reloader" ]
+ENTRYPOINT [ "poetry", "run", "python", "app.py", "-H", "0.0.0.0", "-P", "80", "-B", "/trading-strategy-analysis/", "--no-reloader" ]
 
 
 # Set the command to run your application -- development
